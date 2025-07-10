@@ -36,37 +36,28 @@
   </v-container>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
 import axios from "axios";
+import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
-export default {
-  data() {
-    return {
-      student: {
-        name: "",
-        email: "",
-        phone: "",
-      },
-    };
-  },
-  methods: {
-    handleSubmitForm() {
-      const apiURL = "http://localhost:4000/api/create-student";
+const toast = useToast();
+const router = useRouter();
+const student = ref({ name: "", email: "", phone: "" });
+const apiURL = "http://localhost:4000/api/create-student";
 
-      axios
-        .post(apiURL, this.student)
-        .then(() => {
-          this.$toast.success("Student je uspješno dodan!");
-          this.$router.push({ name: "view" });
-          this.student = { name: "", email: "", phone: "" };
-        })
-        .catch((error) => {
-          console.error(error);
-          this.$toast.error(
-            "Greška pri dodavanju studenta. Pokušajte ponovno."
-          );
-        });
-    },
-  },
-};
+function handleSubmitForm() {
+  axios
+    .post(apiURL, student.value)
+    .then(() => {
+      toast.success("Student je uspješno dodan!");
+      router.push({ name: "view" });
+      student.value = { name: "", email: "", phone: "" };
+    })
+    .catch((error) => {
+      console.error(error);
+      toast.error("Greška pri dodavanju studenta. Pokušajte ponovno.");
+    });
+}
 </script>

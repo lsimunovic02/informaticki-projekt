@@ -81,6 +81,9 @@
 
 <script>
 import axios from "axios";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 export default {
   data() {
@@ -129,9 +132,11 @@ export default {
         .delete(`http://localhost:4000/api/delete-student/${id}`)
         .then(() => {
           this.Students = this.Students.filter((s) => s._id !== id);
+          toast.success("Student je uspješno izbrisan!");
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
+          toast.error("Greška pri brisanju studenta. Pokušajte ponovno.");
         });
     },
   },

@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-col cols="12" md="6">
         <v-card elevation="2">
-          <v-card-title>Edit Student</v-card-title>
+          <v-card-title>Uredi Studenta</v-card-title>
           <v-card-text>
             <v-form @submit.prevent="handleUpdateForm">
               <v-text-field
@@ -26,7 +26,7 @@
                 outlined
               />
               <v-btn type="submit" color="primary" block class="mt-4">
-                Update
+                Ažuriraj
               </v-btn>
             </v-form>
           </v-card-text>
@@ -38,6 +38,9 @@
 
 <script>
 import axios from "axios";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 export default {
   data() {
@@ -57,14 +60,16 @@ export default {
   },
   methods: {
     handleUpdateForm() {
-      let id = this.$route.params.id;
+      const id = this.$route.params.id;
       axios
         .put(`http://localhost:4000/api/update-student/${id}`, this.student)
         .then(() => {
-          this.$router.push("/view");
+          toast.success("Student je uspješno ažuriran!");
+          this.$router.push({ name: "view" });
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
+          toast.error("Greška pri ažuriranju studenta. Pokušajte ponovno.");
         });
     },
   },
